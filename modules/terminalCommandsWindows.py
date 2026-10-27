@@ -37,16 +37,16 @@ def setTopCenter(text="============================MERIDIAN-ARCH//BACKDOOR_ACCES
 def printCentered(text, header="", indent=4, headerPadding=5):
     columns, lines = os.get_terminal_size()
 
-    # 1. Clear screen and draw the fixed top banner
+    # Clear screen and draw the fixed top banner
     clearConsole()
     setTopCenter()
     
-    # 2. Add padding lines below the top banner to push the header down
+    # Add padding lines below the top banner to push the header down
     print("\n" * headerPadding, end="")
 
     indentSpaces = " " * indent
     
-    # 3. Indent and print the header
+    # Indent and print the header
     if header:
         indentedHeader = "\n".join(indentSpaces + line for line in header.splitlines())
         print(indentedHeader)
@@ -54,14 +54,11 @@ def printCentered(text, header="", indent=4, headerPadding=5):
     else:
         headerLines = 0
 
-    # 4. Calculate total empty lines left in the console
-    # Account for: banner (1), header position (headerPadding), header lines, and the text (1)
-    # Also subtract 1 line for the bottom "Press any key to continue..." prompt if it's there
+    # Calculate total empty lines left in the console
     totalUsedLines = 1 + headerPadding + headerLines + 1 + 1
     remainingLines = lines - totalUsedLines
 
-    # 5. Split remaining lines: top half goes above text, bottom half goes below
-    # We subtract what we already used at the top from the top padding half
+    # Split remaining lines: top half goes above text, bottom half goes below
     linesAboveText = lines // 2
     topVerticalPadding = linesAboveText - (1 + headerPadding + headerLines)
     bottomVerticalPadding = remainingLines - topVerticalPadding
@@ -70,7 +67,7 @@ def printCentered(text, header="", indent=4, headerPadding=5):
     topVerticalPadding = max(0, topVerticalPadding)
     bottomVerticalPadding = max(0, bottomVerticalPadding)
 
-    # 6. Center text using full width
+    # Center text using full width
     rawCenteredText = text.center(columns)
     if rawCenteredText.startswith(" " * indent):
         indentedText = rawCenteredText
@@ -78,7 +75,7 @@ def printCentered(text, header="", indent=4, headerPadding=5):
         strippedText = text.center(columns - (indent * 2))
         indentedText = indentSpaces + strippedText
 
-    # 7. Output with decoupled, independent top and bottom padding sizes
+    # Output with decoupled, independent top and bottom padding sizes
     print("\n" * topVerticalPadding, end="")
     print(indentedText)
     print("\n" * bottomVerticalPadding, end="")

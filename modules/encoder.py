@@ -10,7 +10,7 @@ def messagePayload(textStr: str, encodeType: str = "utf-8") -> bytes:
     # Add a 1 in front of each byte and join them to a continuous string
     binaryNineStr = "".join("1" + f"{b:08b}" for b in byteData)
 
-    #Chunk it into groupings of 8 now
+    # Chunk it into groupings of 8 now
     chunkedBinary = [binaryNineStr[i:i+8] for i in range(0, len(binaryNineStr), 8)]
 
     # Verify that the last block is 8 bits, otherwise pad with 0
