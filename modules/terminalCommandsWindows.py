@@ -1,0 +1,104 @@
+# terminalCommandsWindows.py
+# Purpose: Control overall terminal items (like background color)
+
+import sys
+import os
+import subprocess
+
+def setBackgroundColor(bgRGB):
+    rBg, gBg, bBg = bgRGB
+
+    ansiCode = f"\033[48;2;{rBg};{gBg};{bBg}m\033[2J\033[H"
+    
+    sys.stdout.write(ansiCode)
+    sys.stdout.flush()
+
+def setTextColor(textRGB):
+    rTxt, gTxt, bTxt = textRGB
+    
+    ansiCode = f"\033[38;2;{rTxt};{gTxt};{bTxt}m"
+    
+    sys.stdout.write(ansiCode)
+    sys.stdout.flush()
+
+def setTopCenter(text="============================MERIDIAN-ARCH//BACKDOOR_ACCESS//UTILITY TOOLS============================"):
+    terminalSize = os.get_terminal_size()
+    columns = terminalSize.columns
+
+    if len(text) > columns:
+        text = text[:columns]
+
+    centeredText = text.center(columns)
+
+    sys.stdout.write("\033[1;1H")
+    sys.stdout.write(centeredText)
+    sys.stdout.flush()
+
+def printCentered(text, header="", indent=4, headerPadding=5):
+    columns, lines = os.get_terminal_size()
+
+    # 1. Clear screen and draw the fixed top banner
+    clearConsole()
+    setTopCenter()
+    
+    # 2. Add padding lines below the top banner to push the header down
+    print("\n" * headerPadding, end="")
+
+    indentSpaces = " " * indent
+    
+    # 3. Indent and print the header
+    if header:
+        indentedHeader = "\n".join(indentSpaces + line for line in header.splitlines())
+        print(indentedHeader)
+        headerLines = header.count('\n') + 1
+    else:
+        headerLines = 0
+
+    # 4. Calculate total empty lines left in the console
+    # Account for: banner (1), header position (headerPadding), header lines, and the text (1)
+    # Also subtract 1 line for the bottom "Press any key to continue..." prompt if it's there
+    totalUsedLines = 1 + headerPadding + headerLines + 1 + 1
+    remainingLines = lines - totalUsedLines
+
+    # 5. Split remaining lines: top half goes above text, bottom half goes below
+    # We subtract what we already used at the top from the top padding half
+    linesAboveText = lines // 2
+    topVerticalPadding = linesAboveText - (1 + headerPadding + headerLines)
+    bottomVerticalPadding = remainingLines - topVerticalPadding
+
+    # Ensure padding numbers never drop below zero on small screens
+    topVerticalPadding = max(0, topVerticalPadding)
+    bottomVerticalPadding = max(0, bottomVerticalPadding)
+
+    # 6. Center text using full width
+    rawCenteredText = text.center(columns)
+    if rawCenteredText.startswith(" " * indent):
+        indentedText = rawCenteredText
+    else:
+        strippedText = text.center(columns - (indent * 2))
+        indentedText = indentSpaces + strippedText
+
+    # 7. Output with decoupled, independent top and bottom padding sizes
+    print("\n" * topVerticalPadding, end="")
+    print(indentedText)
+    print("\n" * bottomVerticalPadding, end="")
+
+
+def waitKey(prompt="Press any key to continue..."):
+    print(prompt, end="", flush=True)
+    
+    if os.name == "nt":
+        # Windows configuration
+        import msvcrt
+        msvcrt.getch()
+
+def clearConsole():
+    # Detect the operating system
+    command = 'cls' if os.name == 'nt' else 'clear'
+    
+    # Run the system command safely
+    subprocess.run([command], shell=True)
+
+def resetTerminal():
+    sys.stdout.write("\033[0m")
+    sys.stdout.flush()
