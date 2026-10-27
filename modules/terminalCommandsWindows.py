@@ -9,17 +9,15 @@ def setBackgroundColor(bgRGB):
     rBg, gBg, bBg = bgRGB
 
     ansiCode = f"\033[48;2;{rBg};{gBg};{bBg}m\033[2J\033[H"
-    
-    sys.stdout.write(ansiCode)
-    sys.stdout.flush()
+
+    print(ansiCode)
 
 def setTextColor(textRGB):
     rTxt, gTxt, bTxt = textRGB
     
     ansiCode = f"\033[38;2;{rTxt};{gTxt};{bTxt}m"
     
-    sys.stdout.write(ansiCode)
-    sys.stdout.flush()
+    print(ansiCode)
 
 def setTopCenter(text="============================MERIDIAN-ARCH//BACKDOOR_ACCESS//UTILITY TOOLS============================"):
     terminalSize = os.get_terminal_size()
@@ -30,9 +28,8 @@ def setTopCenter(text="============================MERIDIAN-ARCH//BACKDOOR_ACCES
 
     centeredText = text.center(columns)
 
-    sys.stdout.write("\033[1;1H")
-    sys.stdout.write(centeredText)
-    sys.stdout.flush()
+    print("\033[1;1H")
+    print(centeredText)
 
 def printCentered(text, header="", indent=4, headerPadding=5):
     columns, lines = os.get_terminal_size()
@@ -97,5 +94,4 @@ def clearConsole():
     subprocess.run([command], shell=True)
 
 def resetTerminal():
-    sys.stdout.write("\033[0m")
-    sys.stdout.flush()
+    print("\033[0m")
