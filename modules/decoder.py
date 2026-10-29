@@ -47,11 +47,11 @@ def beginDecode():
         clearConsole()
         setTopCenter()
         print("\n\n")
-        print("1) Decode File")
-        print("2) Decode Folder")
-        print("0) Return to Menu")
+        print("    1) Decode File")
+        print("    2) Decode Folder")
+        print("    0) Return to Menu")
         print("\n")
-        userChoice = input("Input Requested > ")
+        userChoice = input("    Input Requested > ")
         match userChoice:
             case "1":
                 decodeFile()

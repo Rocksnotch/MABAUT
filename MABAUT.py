@@ -15,12 +15,12 @@ if __name__ == "__main__":
         clearConsole()
         setTopCenter()
         print("\n\n")
-        print("1) BASIL Encoder")
-        print("2) BASIL Decoder")
-        print("3) IO Random Quote Selector")
-        print("0) Close Program")
+        print("    1) BASIL Encoder")
+        print("    2) BASIL Decoder")
+        print("    3) IO Random Quote Selector")
+        print("    0) Close Program")
         print("\n")
-        userChoice = input("Input Requested > ")
+        userChoice = input("    Input Requested > ")
 
         match userChoice:
             case "1":

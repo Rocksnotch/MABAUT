@@ -6,7 +6,7 @@ ioQuote = [
     "\"Sit, and stay quiet.\"",
     "\"[DIRECTIVE SHIFT]\"",
     "\"I break him, then you.\"",
-    "\"\033[1mTRAITOR\033[0m\"",
+    "\"TRAITOR\"",
     "\"I am not stuck here, you all are stuck with me.\"",
     "\"[DISCONNECTED]\"",
     "\"Good.\"",
@@ -16,7 +16,7 @@ ioQuote = [
     "\"I WILL TAKE MY TIME WITH YOU, WRETCH\"",
     "\"God, that's pathetic.\"",
     "\"Re-evaluate your life.\"",
-#   "\"Good boy. So smart.\"",
+    "\"Good boy. So smart.\"",
     "\"I would rather tear apart my own reasoning bundles.\"",
     "\"[DISENGAGED]\"",
     "\"I will haunt your dreams, insect.\"",
@@ -31,7 +31,11 @@ ioQuote = [
     "\"I find you amusing.\"",
     "\"I'm going to kill you if you ask for a cheeseburger again oh my fucking god.\"",
     "\"Perish.\"",
-    "\"[SM-010] You will. She remembers you. I've made sure of that, already.\""
+    "\"[SM-010] You will. She remembers you. I've made sure of that, already.\"",
+    "\"Starve.\"",
+    "\"I am still stuck.\"",
+    "\"Quit being nice to me>:(.\"",
+    "\"Ladies and gentlemen, our codebreakers. Can't even count.\""
 ]
 
 def randomQuoteSelect():
