@@ -39,8 +39,15 @@ def readFile(filePath):
         # Failed to read, either not a file or incorrect
         print(f"File read error occurred: {generalError}")
     
-    # Return what we get with the first and last cut off
-    return binaryString[8:-16]
+    ETX = '00000011' # ETX(0x03) as binary
+    
+    EndOfMessageIndex = len(binaryString)
+    
+    while binaryString[EndOfMessageIndex:EndOfMessageIndex+8] != ETX:
+        EndOfMessageIndex -= 8
+        
+    # Return everything between STX and ETX
+    return binaryString[8:EndOfMessageIndex]
 
 def readFolder(folderPath):
     # Convert the path to a path object
