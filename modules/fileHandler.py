@@ -43,6 +43,7 @@ def readFile(filePath):
     
     EndOfMessageIndex = len(binaryString)
     
+    # Scans backwards till EndOfMessageIndex hits the start of ETX
     while binaryString[EndOfMessageIndex:EndOfMessageIndex+8] != ETX:
         EndOfMessageIndex -= 8
         
