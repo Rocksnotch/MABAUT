@@ -92,7 +92,7 @@ def waitKey(prompt="Press any key to continue..."):
         if not sys.stdin.isatty():
             return
 
-        fileDescriptor  = sys.stdin.fileno()
+        fileDescriptor = sys.stdin.fileno()
 
         oldTerm = termios.tcgetattr(fileDescriptor)
 
@@ -103,7 +103,7 @@ def waitKey(prompt="Press any key to continue..."):
         finally:
             # Reset terminal settings
             termios.tcsetattr(fileDescriptor, termios.TCSAFLUSH, oldTerm)
-        
+
 def clearConsole():
     # Detect the operating system
     command = 'cls' if os.name == 'nt' else 'clear'
