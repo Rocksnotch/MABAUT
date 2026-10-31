@@ -4,6 +4,7 @@ from modules.terminalCommandsWindows import *
 from modules.encoder import beginEncode
 from modules.decoder import beginDecode
 from modules.ioQuotes import randomQuoteSelect
+from modules.decryptions.aes128 import beginDecrypt
 
 # Global Variables
 endProgram = False
@@ -18,6 +19,7 @@ if __name__ == "__main__":
         print("    1) BASIL Encoder")
         print("    2) BASIL Decoder")
         print("    3) IO Random Quote Selector")
+        print("    4) AES Decoder")
         print("    0) Close Program")
         print("\n")
         userChoice = input("    Input Requested > ")
@@ -30,6 +32,9 @@ if __name__ == "__main__":
                 beginDecode()
             case "3":
                 randomQuoteSelect()
+                waitKey()
+            case "4":
+                beginDecrypt()
                 waitKey()
             case "0":
                 print("Closing program...")
