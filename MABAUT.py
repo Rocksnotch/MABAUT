@@ -1,6 +1,6 @@
 import time
 
-from modules.terminalCommandsWindows import *
+from modules.terminalCommands import *
 from modules.encoder import beginEncode
 from modules.decoder import beginDecode
 from modules.ioQuotes import randomQuoteSelect

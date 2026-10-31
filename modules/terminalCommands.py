@@ -1,4 +1,4 @@
-# terminalCommandsWindows.py
+# terminalCommands.py
 # Purpose: Control overall terminal items (like background color)
 
 import sys
@@ -85,7 +85,25 @@ def waitKey(prompt="Press any key to continue..."):
         # Windows configuration
         import msvcrt
         msvcrt.getch()
+    elif os.name == "posix":
+        import termios
+        import tty
+        # Not a TTY, don't wait for key
+        if not sys.stdin.isatty():
+            return
 
+        fileDescriptor  = sys.stdin.fileno()
+
+        oldTerm = termios.tcgetattr(fileDescriptor)
+
+        # Wrapped in try in case of crash during wait leaving the terminal settings changed
+        try:
+            tty.setcbreak(fileDescriptor)
+            sys.stdin.read(1)
+        finally:
+            # Reset terminal settings
+            termios.tcsetattr(fileDescriptor, termios.TCSAFLUSH, oldTerm)
+        
 def clearConsole():
     # Detect the operating system
     command = 'cls' if os.name == 'nt' else 'clear'

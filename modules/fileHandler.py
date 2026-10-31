@@ -1,5 +1,5 @@
 from pathlib import Path
-import modules.terminalCommandsWindows as terminalCommandsWindows
+import modules.terminalCommands as terminalCommands
 
 def writeFileHex(filePayload, filePath):
     rawData = bytes(int(val, 16) for val in filePayload)

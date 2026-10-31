@@ -1,5 +1,5 @@
 import random
-import modules.terminalCommandsWindows
+import modules.terminalCommands
 
 
 ioQuote = [
@@ -40,5 +40,5 @@ ioQuote = [
 
 def randomQuoteSelect():
     randomQuote = random.choice(ioQuote)
-    modules.terminalCommandsWindows.printCentered(randomQuote, "IO once said...", indent=8, headerPadding=8)
+    modules.terminalCommands.printCentered(randomQuote, "IO once said...", indent=8, headerPadding=8)
     
