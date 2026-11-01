@@ -93,11 +93,13 @@ def waitKey(prompt="Press any key to continue..."):
             return
 
         fileDescriptor = sys.stdin.fileno()
-
+        
+        # Save old terminal settings
         oldTerm = termios.tcgetattr(fileDescriptor)
 
         # Wrapped in try in case of crash during wait leaving the terminal settings changed
         try:
+            # Disable input buffering and echoing
             tty.setcbreak(fileDescriptor)
             sys.stdin.read(1)
         finally:
