@@ -26,7 +26,7 @@ def _tonesActiveAtTime(middleOfBeepInSeconds, timeColumns, tonePower, timeWindow
     return [toneFrequency for toneFrequency, tonePower in toneFrequencyPowerPairs if tonePower > onThreshold]
 
 
-def decodeBeeps(inputAudioPath: str | Path, startReadTime: float = 0, beepLength: float = 0.2, timeWindow: float = 0.05) -> tuple[list[list[str]], list[str]]:
+def decodeBeeps(inputAudioPath: str | Path, startReadTime: float = 0, beepLength: float = 0.2, timeWindow: float = 0.05) -> tuple[list[list[str]], list[str]] | tuple[None, None]:
     """decodes beeps from audio file
 
     Args:
@@ -36,7 +36,7 @@ def decodeBeeps(inputAudioPath: str | Path, startReadTime: float = 0, beepLength
         timeWindow (float, optional): how far in each direction in seconds to avg the power of the beeps. Defaults to 0.05.
 
     Returns:
-        tuple[list[list[str]], list[str]]: (binary, text) A tuple containing the decoded binary and text split by the header
+        tuple[list[list[str]], list[str]] | tuple[None, None]: (binary, text) A tuple containing the decoded binary and text split by the header, or (None, None) if an error occurs
     """
     inputAudioPath = Path(inputAudioPath)
     
