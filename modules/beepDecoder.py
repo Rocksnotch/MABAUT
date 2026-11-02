@@ -1,6 +1,6 @@
 from pathlib import Path
 import numpy as np
-
+from modules.terminalCommands import setTopCenter, clearConsole, waitKey
 
 
 # All the main bit tones
@@ -147,3 +147,13 @@ if __name__ == "__main__":
     bytes_array, text = decodeBeeps(sys.argv[1])
     print("Decoded bytes:", bytes_array)
     print("Decoded text:", text)
+
+def startBeepDecode():
+    clearConsole()
+    setTopCenter()
+    print("\n\n")
+    userPath = input("Input Audio Path: ")
+    bytesOut, textOut = decodeBeeps(userPath)
+    print("Decoded bytes:", bytesOut)
+    print("Decoded text:", textOut)
+    waitKey()
