@@ -1,5 +1,5 @@
 import modules.fileHandler as fileHandler
-from modules.terminalCommandsWindows import setTopCenter, clearConsole
+from modules.terminalCommands import setTopCenter, clearConsole
 
 def messagePayload(textStr: str, encodeType: str = "utf-8") -> bytes:
     hexList = []

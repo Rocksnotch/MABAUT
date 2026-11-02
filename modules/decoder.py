@@ -1,5 +1,5 @@
 import modules.fileHandler as fileHandler
-from modules.terminalCommandsWindows import setTopCenter, clearConsole, waitKey
+from modules.terminalCommands import setTopCenter, clearConsole, waitKey
 
 # Global Variables
 returnMenu = False
