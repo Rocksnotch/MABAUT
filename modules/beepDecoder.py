@@ -2,27 +2,31 @@ from pathlib import Path
 import numpy as np
 
 
-def _tones_active_at(timeSlot, timeColumnList, tonePower, tones, timeWindow):
-    # Grabs the time index that is closest to the wanted time
-    timeIndex = np.argmin(abs(timeColumnList - timeSlot))
+
+# All the main bit tones
+TONES = [250, 500, 750, 1000, 1250, 1500, 1750]
+
+def _tonesActiveAtTime(middleOfBeepInSeconds, timeColumns, tonePower, timeWindow):
     
-    # All spectrogram columns that fall inside the window around time_slot
-    mask = (timeColumnList >= timeSlot - timeWindow) & (timeColumnList <= timeSlot + timeWindow)
     
+    # All spectrogram columns that fall inside the window around middleOfBeepInSeconds
+    timeWindowMask: list[bool] = (timeColumns >= middleOfBeepInSeconds - timeWindow) & (timeColumns <= middleOfBeepInSeconds + timeWindow)
+        
     # Grabs the avg power of each tone in the window
-    avgPower = tonePower[:, mask].mean(axis=1)
+    avgPower = tonePower[:, timeWindowMask].mean(axis=1)
 
     # So far there has always been at least one bit on
+    # Grab the highest power seen on a single tone
     onThreshold = 0.5 * avgPower.max() 
 
     # Pair each tone with its average power
-    toneFrequencyPowerPairs = list(zip(tones, avgPower))
+    toneFrequencyPowerPairs = list(zip(TONES, avgPower))
     
     # Returns the tones that are on at that time slot
     return [toneFrequency for toneFrequency, tonePower in toneFrequencyPowerPairs if tonePower > onThreshold]
 
 
-def decodeBeeps(inputAudioPath):
+def decodeBeeps(inputAudioPath: str | Path, startReadTime: float = 0, beepLength: float = 0.2, timeWindow: float = 0.05):
     inputAudioPath = Path(inputAudioPath)
     
     # Check if the file exists
@@ -38,50 +42,55 @@ def decodeBeeps(inputAudioPath):
         print("scipy is required for decoding beeps")
         return None, None
     
-    
-    sampleRate, audioData = wavfile.read(inputAudioPath)
-    frequencyList, timeColumnList, spectrogram = signal.spectrogram(audioData.astype(float), fs=sampleRate, nperseg=4096)
+    # The time to start reading the beeps from
+    startReadTime = startReadTime
+    # The length of each beep in seconds
+    beepLength = beepLength
+    # Time around the middle of the beeep to find the active tones
+    timeWindow = timeWindow
 
-    # All the main bit tones
-    tones = [250, 500, 750, 1000, 1250, 1500, 1750] 
+    sampleRate, audioData = wavfile.read(inputAudioPath)
+    
+    frequencyRows, timeColumns, spectrogram = signal.spectrogram(audioData.astype(float), fs=sampleRate, nperseg=4096)
 
 
     # Maps the tones to the indexes in the spectrogram
     # Grabs the index that is closest to the frequency of each tone
-    toneIndexes = [np.argmin(abs(frequencyList - tone)) for tone in tones]
+    toneToSpectrogramMappings = [np.argmin(abs(frequencyRows - tone)) for tone in TONES]
 
-    # Grab the power of the tones at each time slot
-    tonePower = spectrogram[toneIndexes, :]
+    # Grab the power as a row for each tone in TONES
+    powerRows = spectrogram[toneToSpectrogramMappings, :]
 
-    # The start time
-    startReadTime = 0
-    # The beep length
-    beepLength = 0.2
 
-    # Time around the middle of the beeep to find the active tones
-    timeWindow = 0.05
 
-    # The number of beeps in the video
+    # The durration of the audio in seconds
     duration = len(audioData) / sampleRate
+    
+    # the number of beeps in the audio file
     numberOfSlots = round((duration - startReadTime) / beepLength)
 
-    bytesArray = []
-    text = ""
+    rawDecodedBinary = []
+    rawDecodedText = ""
     for beepNumber in range(numberOfSlots):
-        # Middle of the beep
-        timeSlot = startReadTime + beepNumber * beepLength + beepLength / 2
         
-        activeTonesAtTimeSlot = _tones_active_at(timeSlot, timeColumnList, tonePower, tones, timeWindow)
+        
+        beepOffset = beepNumber * beepLength
+        
+        # get the Middle of the beep
+        middleOfBeepInSeconds = startReadTime + beepOffset + beepLength / 2
+        
+        # Get the active tones
+        activeTonesAtTime = _tonesActiveAtTime(middleOfBeepInSeconds, timeColumns, powerRows, timeWindow)
         
         # Remake the binary string from the active tones
-        bits = "".join("1" if tone in activeTonesAtTimeSlot else "0" for tone in tones)
-        bytesArray.append("0" + bits)
+        bits = "".join("1" if tone in activeTonesAtTime else "0" for tone in TONES)
+        rawDecodedBinary.append("0" + bits)
         
         # Convert the binary string to int
         code = int(bits, 2)
         
         REPLACEMENT_CHAR = 0xFFFD # used for invalid characters
-        text += chr(code) if 32 <= code < 127 else chr(REPLACEMENT_CHAR)
+        rawDecodedText += chr(code) if 32 <= code < 127 else chr(REPLACEMENT_CHAR)
 
 
     headerSplitText = []
@@ -90,14 +99,14 @@ def decodeBeeps(inputAudioPath):
     headerRepeatAmount = 8
     
     # The header is 01111111 which leads and ends each part
-    headers = _look_for_header_indexes(bytesArray, "01111111", headerRepeatAmount) 
+    headers = _look_for_header_indexes(rawDecodedBinary, "01111111", headerRepeatAmount) 
     
     while len(headers) > 0:
         headerIndex = headers.pop(0)
         if len(headers) > 0:
             nextHeaderIndex = headers[0]
-            headerSplitBytes.append(bytesArray[headerIndex+headerRepeatAmount:nextHeaderIndex])
-            headerSplitText.append(text[headerIndex+headerRepeatAmount:nextHeaderIndex])
+            headerSplitBytes.append(rawDecodedBinary[headerIndex+headerRepeatAmount:nextHeaderIndex])
+            headerSplitText.append(rawDecodedText[headerIndex+headerRepeatAmount:nextHeaderIndex])
     
 
     return headerSplitBytes, headerSplitText
