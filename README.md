@@ -7,3 +7,4 @@ Created for helping with certain files as well as possibly some fun/helpful feat
 * **TTY Encode** Encoding of raw text into a 'TTY' raw binary format. 
 * **TTY Decode:** Decoding of 'TTY' raw binary into raw text (90% efficiency pending fixes).
 * **IO Random Quote Selector:** Gives a random quote stated by IO.
+* **Custom Decoder:** Meant for decoding strange ASCII blocks.
